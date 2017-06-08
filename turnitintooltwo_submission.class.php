@@ -169,7 +169,11 @@ class turnitintooltwo_submission {
         if ($idtype == "moodle") {
             $condition = array("id" => $this->id);
         } else {
-            $condition = array("submission_objectid" => $this->submission_objectid);
+            if (empty($turnitintooltwoassignment)) {
+                $condition = array("submission_objectid" => $this->submission_objectid);
+            } else {
+                $condition = array("submission_objectid" => $this->submission_objectid, "turnitintooltwoid" => $turnitintooltwoassignment->turnitintooltwo->id);
+            }
         }
 
         if ($submission = $DB->get_record('turnitintooltwo_submissions',
@@ -708,7 +712,7 @@ class turnitintooltwo_submission {
         static $part;
         static $tiiassignid;
         if ($tiiassignid != $tiisubmissiondata->getAssignmentId() || empty($part)) {
-            $part = $DB->get_record("turnitintooltwo_parts", array("tiiassignid" => $tiisubmissiondata->getAssignmentId()));
+            $part = $DB->get_record("turnitintooltwo_parts", array("tiiassignid" => $tiisubmissiondata->getAssignmentId(), "turnitintooltwoid" => $this->turnitintooltwoid));
         }
         $turnitintooltwoassignment = new turnitintooltwo_assignment($part->turnitintooltwoid);
 
